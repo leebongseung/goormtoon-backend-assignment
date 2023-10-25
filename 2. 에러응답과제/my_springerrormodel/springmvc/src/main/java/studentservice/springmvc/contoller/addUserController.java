@@ -34,7 +34,7 @@ public class addUserController {
         if (student.getGrade() > MAX_GRADE){
             throw new CustomException(ErrorCode.NOT_FOUND, new InputRestriction(MAX_GRADE));
         }
-        Student addStudent = studentService.add(student);
+        studentService.add(student);
 
         return makeResponse(student);
 //        todo: makeResponse 호출 잘해보세요~
