@@ -1,6 +1,5 @@
 package goormtoon.postapp.dto.board;
 
-import goormtoon.postapp.domain.Board;
 import lombok.*;
 
 @Getter

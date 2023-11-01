@@ -1,11 +1,11 @@
 package goormtoon.postapp.dto.board;
 
 import goormtoon.postapp.domain.Board;
-import goormtoon.postapp.domain.Comment;
 import goormtoon.postapp.dto.comment.CommentResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +19,8 @@ public class BoardListCommentDto {
     private String content;
     private int view;
     private List<CommentResponseDto> commentList = new ArrayList<>();
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
 
 
     public BoardListCommentDto(Board board) {
@@ -31,5 +33,7 @@ public class BoardListCommentDto {
                 .filter(comment -> comment.getIsDelete().equals(false))
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
+        this.createAt = board.getCreateAt();
+        this.updateAt = board.getUpdateAt();
     }
 }

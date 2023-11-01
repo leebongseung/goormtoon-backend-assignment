@@ -45,8 +45,6 @@ public class Board {
 
 
     public Board(BoardRequestDto boardRequestDto) {
-
-
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
         this.view = 0;
@@ -65,7 +63,4 @@ public class Board {
         isDelete = delete;
     }
 
-    public void addView(){
-        this.view++;
-    }
 }
