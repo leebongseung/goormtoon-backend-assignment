@@ -39,10 +39,7 @@ public class CommentServicelmpl implements CommentService{
         if(comment.getIsDelete().equals(true)){
             throw new NoSuchElementException("deleteComment");
         }
-
         comment.setDelete(true);
-        commentRepository.save(comment);
-
     }
 
     @Override
@@ -54,8 +51,6 @@ public class CommentServicelmpl implements CommentService{
         if(comment.getIsDelete().equals(true)){
             throw new NoSuchElementException("deleteComment");
         }
-
         comment.setComment(commentRequestDto.getComment());
-        commentRepository.save(comment);
     }
 }

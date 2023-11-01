@@ -2,8 +2,9 @@ package goormtoon.postapp.service;
 
 import goormtoon.postapp.domain.Board;
 import goormtoon.postapp.dto.board.BoardListCommentDto;
+import goormtoon.postapp.dto.board.BoardListResponseDto;
 import goormtoon.postapp.dto.board.BoardRequestDto;
-import goormtoon.postapp.dto.board.BoardResponseDto;
+import goormtoon.postapp.dto.board.BoardDetailResponseDto;
 import goormtoon.postapp.repository.BoardRepository;
 import goormtoon.postapp.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,27 +32,23 @@ public class BoardServicelmpl implements BoardService{
         if(findBoard.getIsDelete()){
             throw new NoSuchElementException("getBoardById");
         }
-
-        findBoard.addView();
-//        boardRepository.save(findBoard);
-
         return new BoardListCommentDto(findBoard);
     }
 
     @Override
-    public Page<BoardResponseDto> getAllBoards(Pageable pageable) {
+    public List<BoardListResponseDto> getAllBoards(Pageable pageable) {
         Page<Board> page = boardRepository.findBoardAllcountBy(pageable);
 
-        return page.map(board -> new BoardResponseDto(board));
+        return page.map(board -> new BoardListResponseDto(board)).getContent();
     }
 
     @Override
-    public BoardResponseDto saveBoard(BoardRequestDto board) {
+    public BoardDetailResponseDto saveBoard(BoardRequestDto board) {
         Board save = boardRepository.save(new Board(board));
         Board findBoard = boardRepository.findById(save.getId()).orElseThrow(() -> new NullPointerException("saveBoard"));
 
         log.info("findBoard ={}", findBoard);
-        return new BoardResponseDto(findBoard);
+        return new BoardDetailResponseDto(findBoard);
     }
 
     @Override
@@ -61,22 +56,18 @@ public class BoardServicelmpl implements BoardService{
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new NullPointerException("deleteBoard"));
         findBoard.setDelete(true);
 
-//        boardRepository.save(findBoard);
-        // update 쿼리 벌크
-
-        // 이게 왜..? ... ?..........? 음...
         commentRepository.updateIsDeleteTrue(findBoard.getId());
 
         return true;
     }
 
     @Override
-    public BoardResponseDto updateBoard(Long boardId, BoardRequestDto board) {
+    public BoardDetailResponseDto updateBoard(Long boardId, BoardRequestDto board) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new NullPointerException("updateBoard"));
         findBoard.setTitle(board.getTitle());
         findBoard.setContent(board.getContent());
-//        boardRepository.save(findBoard);
 
-        return new BoardResponseDto(findBoard);
+
+        return new BoardDetailResponseDto(findBoard);
     }
 }
