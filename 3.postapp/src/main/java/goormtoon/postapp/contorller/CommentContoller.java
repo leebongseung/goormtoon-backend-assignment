@@ -21,13 +21,13 @@ public class CommentContoller {
         return "redirect:/Boards/{BoardId}";
     }
 
-    @PutMapping("/Comment/{CommentId}/delete")
+    @DeleteMapping("/Comment/{CommentId}/delete")
     public String deleteComment(@PathVariable Long CommentId){
         commentServicelmpl.deleteComment(CommentId);
         return "redirect:/Boards/{BoardId}";
     }
 
-    @PutMapping("/Comment/{CommentId}/update")
+    @PatchMapping("/Comment/{CommentId}/update")
     public String updateComment(@PathVariable Long CommentId, @ModelAttribute CommentRequestDto commentRequestDto){
         commentServicelmpl.updateComment(CommentId,commentRequestDto);
         return "redirect:/Boards/{BoardId}";

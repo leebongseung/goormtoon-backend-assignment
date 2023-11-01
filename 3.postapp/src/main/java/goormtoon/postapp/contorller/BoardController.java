@@ -1,13 +1,12 @@
 package goormtoon.postapp.contorller;
 
 import goormtoon.postapp.dto.board.BoardListCommentDto;
+import goormtoon.postapp.dto.board.BoardListResponseDto;
 import goormtoon.postapp.dto.board.BoardRequestDto;
-import goormtoon.postapp.dto.board.BoardResponseDto;
-import goormtoon.postapp.repository.BoardRepository;
+import goormtoon.postapp.dto.board.BoardDetailResponseDto;
 import goormtoon.postapp.service.BoardServicelmpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -27,21 +26,22 @@ public class BoardController {
     //게시판 조회 Paging 구현하기
     @GetMapping
     @ResponseBody
-    public List<BoardResponseDto> Boards(@PageableDefault(size = 10) Pageable pageable){
-        Page<BoardResponseDto> allBoards = boardServicelmpl.getAllBoards(pageable);
-        return allBoards.getContent();
+    public List<BoardListResponseDto> Boards(@PageableDefault(size = 10) Pageable pageable){
+        return boardServicelmpl.getAllBoards(pageable);
     }
 
 
     @PostMapping("/add")
-    @ResponseBody
-    public BoardResponseDto addBoard(@ModelAttribute("boardDto") BoardRequestDto boardRequestDto){
+//    @ResponseBody
+    public String addBoard(@ModelAttribute("boardDto") BoardRequestDto boardRequestDto){
         log.info("addBoard 실행");
 
-        return boardServicelmpl.saveBoard(boardRequestDto);
+        BoardDetailResponseDto boardDetailResponseDto = boardServicelmpl.saveBoard(boardRequestDto);
+        Long id = boardDetailResponseDto.getId();
+        return "redirect:/Boards/" +id;
     }
 
-    @PutMapping("/{BoardId}/delete")
+    @DeleteMapping("/{BoardId}/delete")
     public String deleteBoard(@PathVariable Long BoardId){
         Boolean b = boardServicelmpl.deleteBoard(BoardId);
         if(!b){
@@ -50,9 +50,9 @@ public class BoardController {
         return "redirect:/Boards";
     }
 
-    @PutMapping("/{BoardId}/update")
+    @PatchMapping("/{BoardId}/update")
     @ResponseBody
-    public BoardResponseDto updateBoard(@PathVariable Long BoardId, @ModelAttribute BoardRequestDto boardRequestDto){
+    public BoardDetailResponseDto updateBoard(@PathVariable Long BoardId, @ModelAttribute BoardRequestDto boardRequestDto){
         return boardServicelmpl.updateBoard(BoardId, boardRequestDto);
     }
 
